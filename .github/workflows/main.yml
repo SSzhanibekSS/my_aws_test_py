@@ -1,0 +1,34 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - main  # Пайплайн срабатывает при пуше в ветку main
+  workflow_dispatch:  # Позволяет запускать пайплайн вручную
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Шаг 1: Клонирование репозитория
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Шаг 2: Логин в контейнерный реестр (Docker Hub в данном примере)
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # Шаг 3: Сборка Docker-образа
+      - name: Build Docker image
+        run: |
+          docker build -t aws-test-python:latest .
+
+      # Шаг 4: Тегирование и публикация образа
+      - name: Push Docker image to Docker Hub
+        run: |
+          docker tag my-app:latest ${{ secrets.DOCKER_USERNAME }}/aws-test-python:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/aws-test-python:latest
