@@ -30,5 +30,5 @@ jobs:
       # Шаг 4: Тегирование и публикация образа
       - name: Push Docker image to Docker Hub
         run: |
-          docker tag my-app:latest ${{ secrets.DOCKER_USERNAME }}/aws-test-python:latest
+          docker tag aws-test-python:latest ${{ secrets.DOCKER_USERNAME }}/aws-test-python:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/aws-test-python:latest
